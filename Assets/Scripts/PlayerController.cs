@@ -19,6 +19,10 @@ public class PlayerController : MonoBehaviour
     float xRot;
     public Camera cam;
     WorldGenerator world;
+    BlockType selectedBlock = BlockType.GRASS;
+    UnityEngine.UI.RawImage grassIcon;
+    UnityEngine.UI.RawImage stoneIcon;
+    UnityEngine.UI.RawImage waterIcon;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +30,12 @@ public class PlayerController : MonoBehaviour
         cam = Camera.main;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        grassIcon = GameObject.Find("GrassIcon").GetComponent<UnityEngine.UI.RawImage>();
+        stoneIcon = GameObject.Find("StoneIcon").GetComponent<UnityEngine.UI.RawImage>();
+        waterIcon = GameObject.Find("WaterIcon").GetComponent<UnityEngine.UI.RawImage>();
+        
+        SetSelectedBlock(BlockType.GRASS);
     }
 
     // Update is called once per frame
@@ -34,6 +44,7 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
         MouseLook();
         MouseClick();
+        HandleKeyboardClick();
     }
 
     void MovePlayer()
@@ -98,5 +109,46 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            var ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
+            if (Physics.Raycast(ray, out var hit, destroyDistance))
+            {
+                if (hit.transform.GetComponent<BlockController>())
+                {
+                    var pos = hit.transform.position + hit.normal;
+                    Vector3Int posInt = new Vector3Int(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                    world.CreateBlock(posInt, selectedBlock);
+                }
+            }
+        }
+    }
+
+    private void HandleKeyboardClick()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SetSelectedBlock(BlockType.GRASS);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SetSelectedBlock(BlockType.STONE);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SetSelectedBlock(BlockType.WATER);
+        }
+    }
+
+    private void SetSelectedBlock(BlockType type)
+    {
+        selectedBlock = type;
+        grassIcon.GetComponent<RectTransform>().transform.localScale =
+            Vector3.one * (type == BlockType.GRASS ? 0.7F : 0.5F);
+        stoneIcon.GetComponent<RectTransform>().transform.localScale =
+            Vector3.one * (type == BlockType.STONE ? 0.7F : 0.5F);
+        waterIcon.GetComponent<RectTransform>().transform.localScale =
+            Vector3.one * (type == BlockType.WATER ? 0.7F : 0.5F);
     }
 }
