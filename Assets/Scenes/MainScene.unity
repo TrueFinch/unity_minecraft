@@ -488,19 +488,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1867754445946105557, guid: 8b6d34a25489b0f4c975a4e24b5db154, type: 3}
   creeper: {fileID: 5855141950508163966, guid: 494a5864095b3b54cb0c29486637b73b, type: 3}
-  size: 32
+  size: 64
   height: 50
-  groundHeight: 1
+  groundHeight: 3
   bedrockHeight: 2
-  seed: 782830
-  octave1: 1
-  octave2: 0.5
-  octave3: 0.25
-  freq1: 2
-  freq2: 4
-  freq3: 10
-  exponent: 3.1
-  creeperCount: 1
+  seed: 1
+  octave1: 4
+  octave2: 3
+  octave3: 2
+  freq1: 4
+  freq2: 8
+  freq3: 16
+  exponent: 5
+  creeperCount: 0
   creeperDistanceFromPlayer: 10
   availableBlocks:
   - {fileID: 2129567054921907152, guid: 6b36a96e7ea85ae41a438ef2f012d5ac, type: 3}
