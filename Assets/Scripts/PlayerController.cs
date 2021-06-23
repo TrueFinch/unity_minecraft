@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public float gravity = 20;
     public float cameraSensitivity = 4;
 
-    public float destroyDistance = 5;
+    public int destroyDistance = 5;
 
     Vector3 moveDir = Vector3.zero;
 

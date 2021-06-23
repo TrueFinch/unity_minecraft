@@ -412,6 +412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1867754445946105557, guid: 8b6d34a25489b0f4c975a4e24b5db154, type: 3}
+  creeper: {fileID: 5855141950508163966, guid: 494a5864095b3b54cb0c29486637b73b, type: 3}
   size: 32
   height: 50
   groundHeight: 1
@@ -424,6 +425,7 @@ MonoBehaviour:
   freq2: 4
   freq3: 10
   exponent: 3.1
+  creeperCount: 1
   availableBlocks:
   - {fileID: 2129567054921907152, guid: 6b36a96e7ea85ae41a438ef2f012d5ac, type: 3}
   - {fileID: 5637023186684234182, guid: 589bf118b23a3f744b1ea3685b51f167, type: 3}

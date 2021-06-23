@@ -16,6 +16,7 @@ public enum BlockType
 public class WorldGenerator : MonoBehaviour
 {
     public GameObject player;
+    public GameObject creeper;
 
     public uint size;
     public uint height;
@@ -29,6 +30,9 @@ public class WorldGenerator : MonoBehaviour
     public float freq2;
     public float freq3;
     public float exponent;
+
+    public int creeperCount = 1;
+    public float creeperDistanceFromPlayer = 10F;
 
     public GameObject[] availableBlocks;
 
@@ -48,6 +52,10 @@ public class WorldGenerator : MonoBehaviour
         GenerateWorld();
         GenerateWater();
         SpawnPlayer();
+        for (var i = 0; i < creeperCount; ++i)
+        {
+            SpawnCreeper();
+        }
     }
 
     // Update is called once per frame
@@ -143,6 +151,30 @@ public class WorldGenerator : MonoBehaviour
                         return;
                     }
                 }
+            }
+        }
+    }
+
+    private void SpawnCreeper()
+    {
+        var player_transform = GameObject.FindGameObjectWithTag("Player").transform;
+        Vector3 pos = Vector3.zero;
+        while (true)
+        {
+            pos.x = Mathf.FloorToInt(Random.Range(0, size - 1));
+            pos.z = Mathf.FloorToInt(Random.Range(0, size - 1));
+            if (Vector3.Distance(player_transform.position, pos) >= creeperDistanceFromPlayer)
+            {
+                break;
+            }
+        }
+        int x = (int)pos.x, z = (int)pos.z;
+        for (var y = 0; y < bedrockHeight + groundHeight + height; ++y)
+        {
+            if (blocksData[x, y, z] == BlockType.NONE)
+            {
+                Instantiate(creeper, new Vector3(x, y + 3, z), Quaternion.identity);
+                break;
             }
         }
     }
