@@ -15,6 +15,8 @@ public enum BlockType
 
 public class WorldGenerator : MonoBehaviour
 {
+    public GameObject player;
+
     public uint size;
     public uint height;
     public uint groundHeight;
@@ -42,6 +44,7 @@ public class WorldGenerator : MonoBehaviour
         blocksData = new BlockType[size, bedrockHeight + groundHeight + height, size];
         GenerateWorld();
         GenerateWater();
+        SpawnPlayer();
     }
 
     // Update is called once per frame
@@ -122,9 +125,27 @@ public class WorldGenerator : MonoBehaviour
         //}
     }
 
+    private void SpawnPlayer()
+    {
+        //spawn player at thee highest point
+        for (var y = bedrockHeight + groundHeight + height - 1; y >= 0; --y)
+        {
+            for (var x = 0; x < size; ++x)
+            {
+                for (var z = 0; z < size; ++z)
+                {
+                    if (blocksData[x, y, z] !=  BlockType.NONE)
+                    {
+                        Instantiate(player, new Vector3(x, y + 3, z), Quaternion.identity);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     private void CreateBlock(Vector3Int pos, BlockType type)
     {
-        Debug.Log(pos);
         GameObject go = availableBlocks[(int)type - 1];
         var block = Instantiate(go, pos, Quaternion.identity);
         block.tag = type.ToString();
