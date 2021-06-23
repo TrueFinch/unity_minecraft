@@ -63,16 +63,6 @@ public class CreeperController : MonoBehaviour
         Vector3 targetPos = target.transform.position;
         targetPos.y = creeperPos.y;
 
-        RaycastHit hit;
-        BlockController block;
-
-        if (Physics.Raycast(creeperPos, targetPos, out hit, 1))
-        {
-            if (hit.transform.GetComponent<BlockController>())
-            {
-                return true;
-            }
-        }
-        return false;
+        return Physics.Raycast(creeperPos, targetPos, 1);
     }
 }
