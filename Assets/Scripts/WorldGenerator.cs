@@ -33,6 +33,7 @@ public class WorldGenerator : MonoBehaviour
     public GameObject[] availableBlocks;
 
     private BlockType[,,] blocksData;
+    private Dictionary<Vector3Int, GameObject> blocksRef;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +43,8 @@ public class WorldGenerator : MonoBehaviour
             Debug.Log(seed);
         }
         blocksData = new BlockType[size, bedrockHeight + groundHeight + height, size];
+        blocksRef = new Dictionary<Vector3Int, GameObject>();
+
         GenerateWorld();
         GenerateWater();
         SpawnPlayer();
@@ -144,12 +147,22 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    private void CreateBlock(Vector3Int pos, BlockType type)
+    public void CreateBlock(Vector3Int pos, BlockType type)
     {
         GameObject go = availableBlocks[(int)type - 1];
         var block = Instantiate(go, pos, Quaternion.identity);
+        blocksRef.Add(pos, block);
         block.tag = type.ToString();
         block.transform.SetParent(GameObject.FindGameObjectWithTag("World").transform);
         blocksData[pos.x, pos.y, pos.z] = type;
+    }
+
+    public void DestroyBlock(Vector3Int pos)
+    {
+        if (blocksRef.ContainsKey(pos))
+        {
+            Destroy(blocksRef[pos]);
+            blocksRef.Remove(pos);
+        }
     }
 }

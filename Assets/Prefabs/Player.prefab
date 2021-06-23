@@ -246,6 +246,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f4749f8953f4441907a091250ecbe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayAmount: 6000
+  rayAmount: 5000
   rayDistance: 50
-  stayTime: 5
+  stayTime: 3

@@ -8,7 +8,7 @@ public class OcclusionScript : MonoBehaviour
     public int rayDistance = 300;
     public float stayTime = 2;
 
-    Camera cam;
+    public Camera cam;
     Vector2[] rPoints;
     // Start is called before the first frame update
     void Start()

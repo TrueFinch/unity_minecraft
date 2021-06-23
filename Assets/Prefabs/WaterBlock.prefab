@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 3250088112773783931}
   - component: {fileID: 3250088112773783930}
   - component: {fileID: -3028819476574580348}
+  - component: {fileID: -732827835865931262}
   m_Layer: 0
   m_Name: WaterBlock
-  m_TagString: Untagged
+  m_TagString: WATER
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -109,3 +110,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayTime: 0
+--- !u!114 &-732827835865931262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3250088112773783929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8bc90f51246df741ab03b7ef7e09749, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
