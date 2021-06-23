@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
