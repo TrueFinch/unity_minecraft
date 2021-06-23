@@ -158,7 +158,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -246,11 +246,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1867754445946105557, guid: 8b6d34a25489b0f4c975a4e24b5db154, type: 3}
-  size: 32
+  size: 64
   height: 50
   groundHeight: 1
   bedrockHeight: 2
-  seed: 0
+  seed: 782830
   octave1: 1
   octave2: 0.5
   octave3: 0.25

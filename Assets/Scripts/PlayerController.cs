@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     float yRot;
     float xRot;
     public float sensitivity = 4;
-    Camera cam;
+    public Camera cam;
 
     // Start is called before the first frame update
     void Start()
