@@ -10,6 +10,7 @@ public class CreeperController : MonoBehaviour
     public float gravity = 20;
     public int destroyDistance = 5;
 
+    bool isblinking = false;
     Vector3 moveDir = Vector3.zero;
     GameObject target;
     // Start is called before the first frame update
@@ -33,7 +34,26 @@ public class CreeperController : MonoBehaviour
         {
             moveDir.x = 0;
             moveDir.z = 0;
-            //destroy logic
+            BlinkingEffect effect;
+            if (!isblinking)
+            {
+                isblinking = true;
+                if (effect = gameObject.GetComponent<BlinkingEffect>())
+                {
+                    //Debug.Log("Start blinking");
+                    effect.StartBlinking(() =>
+                    {
+                        isblinking = false;
+                        var distanceToPlayer = Vector3.Distance(target.transform.position, transform.position);
+                        if (distanceToPlayer <= destroyDistance)
+                        {
+                            Destroy(gameObject);
+                            //destroy creeper and blocks
+                        }
+                        //Debug.Log("End blinking");
+                    });
+                }
+            }
         }
         else
         {
@@ -57,6 +77,11 @@ public class CreeperController : MonoBehaviour
         character.Move(moveDir * Time.deltaTime);
     }
 
+    private void StartBlinking()
+    {
+        throw new NotImplementedException();
+    }
+
     private bool CheckNeedJump()
     {
         Vector3 creeperPos = transform.position;
@@ -72,7 +97,7 @@ public class CreeperController : MonoBehaviour
 
         if (Physics.Raycast(creeperPos, targetPos, out hit, 1F))
         {
-            Debug.Log(hit.transform.name);
+            //Debug.Log(hit.transform.name);
             return hit.transform.tag != "Creeper";
         }
         return false;
