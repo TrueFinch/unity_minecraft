@@ -298,6 +298,7 @@ public class WorldGenerator : MonoBehaviour
 
     public void CreateBlock(Vector3Int pos, BlockType type)
     {
+        //TODO add check that block in given position exists
         GameObject go = availableBlocks[(int)type - 1];
         var block = Instantiate(go, pos, Quaternion.identity);
         blocksRef.Add(pos, block);
@@ -308,20 +309,18 @@ public class WorldGenerator : MonoBehaviour
         if (type == BlockType.WATER)
         {
             Vector3Int[] neighbours = new Vector3Int[] {
-                Vector3Int.forward, Vector3Int.back, 
+                Vector3Int.forward, Vector3Int.back,
                 Vector3Int.left, Vector3Int.right
             };
             foreach (var n in neighbours)
             {
                 var n1Pos = new Vector3Int(pos.x + n.x * 2, pos.y, pos.z + n.z * 2);
                 var n2Pos = new Vector3Int(pos.x + n.x, pos.y, pos.z + n.z);
-                if (!IsPosValid(n1Pos) || !IsPosValid(n2Pos))
+                if (IsPosValid(n1Pos) && IsPosValid(n2Pos)
+                    && GetBlockData(n1Pos) == BlockType.WATER
+                        && GetBlockData(n2Pos) == BlockType.NONE)
                 {
-                    continue;
-                }
-                if (GetBlockData(n1Pos) == BlockType.WATER
-                    && GetBlockData(n2Pos) == BlockType.NONE)
-                {
+                    // TODO: move to coroutine
                     CreateBlock(n2Pos, BlockType.WATER);
                 }
             }
@@ -329,6 +328,7 @@ public class WorldGenerator : MonoBehaviour
 
             if (IsPosValid(downPos) && GetBlockData(downPos) == BlockType.NONE)
             {
+                // TODO: move to coroutine
                 CreateBlock(downPos, BlockType.WATER);
             }
         }
@@ -340,6 +340,33 @@ public class WorldGenerator : MonoBehaviour
         {
             Destroy(blocksRef[pos]);
             blocksRef.Remove(pos);
+            blocksData[pos.x, pos.y, pos.z] = BlockType.NONE;
+
+            var upPos = pos + Vector3Int.up;
+            if (IsPosValid(upPos) && GetBlockData(upPos) == BlockType.WATER)
+            {
+                // TODO: move to coroutine
+                CreateBlock(pos, BlockType.WATER);
+            }
+            else
+            {
+                var neighbors = new Tuple<Vector3Int, Vector3Int>[]
+                {
+                    new Tuple<Vector3Int, Vector3Int>(pos + Vector3Int.left, pos + Vector3Int.right),
+                    new Tuple<Vector3Int, Vector3Int>(pos + Vector3Int.forward, pos + Vector3Int.back),
+                };
+                foreach (var n in neighbors)
+                {
+                    if (IsPosValid(n.Item1) && IsPosValid(n.Item2)
+                        && GetBlockData(n.Item1) == BlockType.WATER
+                        && GetBlockData(n.Item2) == BlockType.WATER)
+                    {
+                        // TODO: move to coroutine
+                        CreateBlock(pos, BlockType.WATER);
+                        break;
+                    }
+                }
+            }
         }
     }
 }
