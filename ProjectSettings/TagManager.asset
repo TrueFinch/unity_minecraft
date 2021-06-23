@@ -9,6 +9,7 @@ TagManager:
   - STONE
   - GRASS
   - WATER
+  - Creeper
   layers:
   - Default
   - TransparentFX

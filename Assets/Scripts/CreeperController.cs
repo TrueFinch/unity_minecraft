@@ -10,6 +10,7 @@ public class CreeperController : MonoBehaviour
     public float gravity = 20;
     public int destroyDistance = 5;
 
+    Vector3 moveDir = Vector3.zero;
     GameObject target;
     // Start is called before the first frame update
     void Start()
@@ -25,22 +26,22 @@ public class CreeperController : MonoBehaviour
 
     private void MoveCreeper()
     {
+        var character = GetComponent<CharacterController>();
         bool jumped = false;
         var distanceToPlayer = Vector3.Distance(target.transform.position, transform.position);
-        Vector3 moveDir = Vector3.zero;
         if (distanceToPlayer <= destroyDistance)
         {
+            moveDir.x = 0;
+            moveDir.z = 0;
             //destroy logic
         }
         else
         {
-            var character = GetComponent<CharacterController>();
             if (character.isGrounded)
             {
                 moveDir = target.transform.position - transform.position;
                 moveDir *= moveSpeed;
                 moveDir /= distanceToPlayer;
-                moveDir.y = 0;
 
                 if (CheckNeedJump())
                 {
@@ -48,21 +49,32 @@ public class CreeperController : MonoBehaviour
                     moveDir.y = jumpSpeed;
                 }
             }
-            if (!jumped)
-            {
-                moveDir.y -= gravity * Time.deltaTime;
-            }
-            character.Move(moveDir * Time.deltaTime);
         }
+        if (!jumped)
+        {
+            moveDir.y -= gravity * Time.deltaTime;
+        }
+        character.Move(moveDir * Time.deltaTime);
     }
 
     private bool CheckNeedJump()
     {
         Vector3 creeperPos = transform.position;
+        creeperPos.x = Mathf.Floor(creeperPos.x);
         creeperPos.y = Mathf.Floor(creeperPos.y);
+        creeperPos.z = Mathf.Floor(creeperPos.z);
         Vector3 targetPos = target.transform.position;
+        targetPos.x = Mathf.Floor(targetPos.x);
         targetPos.y = creeperPos.y;
+        targetPos.z = Mathf.Floor(targetPos.z);
 
-        return Physics.Raycast(creeperPos, targetPos, 1);
+        RaycastHit hit;
+
+        if (Physics.Raycast(creeperPos, targetPos, out hit, 1F))
+        {
+            Debug.Log(hit.transform.name);
+            return hit.transform.tag != "Creeper";
+        }
+        return false;
     }
 }

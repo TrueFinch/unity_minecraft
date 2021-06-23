@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2276281933509215443}
   m_Layer: 0
   m_Name: Creeper
-  m_TagString: Untagged
+  m_TagString: Creeper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
-  jumpSpeed: 8
+  jumpSpeed: 6.5
   gravity: 20
   destroyDistance: 5
 --- !u!143 &7000608203353357862
