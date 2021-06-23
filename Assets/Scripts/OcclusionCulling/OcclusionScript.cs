@@ -48,13 +48,24 @@ public class OcclusionScript : MonoBehaviour
             Ray ray;
             RaycastHit hit;
             OcclusionObject occl_obj;
-
+            int layersMask = 1 << 4;
+            layersMask = ~layersMask; //ignore layer with water
             ray = cam.ViewportPointToRay(new Vector3(rPoints[i].x, rPoints[i].y, 0));
             if (Physics.Raycast(ray, out hit, rayDistance))
             {
                 if (occl_obj = hit.transform.GetComponent<OcclusionObject>())
                 {
-                    occl_obj.HitOcclude(stayTime); 
+                    occl_obj.HitOcclude(stayTime);
+                    // if ray hit water, then cast another ray but ignore water
+                    if (occl_obj.transform.tag == "WATER"
+                        && (Physics.Raycast(ray, out hit, rayDistance, layersMask)))
+                    {
+
+                        if (occl_obj = hit.transform.GetComponent<OcclusionObject>())
+                        {
+                            occl_obj.HitOcclude(stayTime);
+                        }
+                    }
                 }
             }
         }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -3028819476574580348}
   - component: {fileID: -732827835865931262}
   - component: {fileID: 3464344037644978660}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterBlock
   m_TagString: WATER
   m_Icon: {fileID: 0}
