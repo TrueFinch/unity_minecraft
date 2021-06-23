@@ -232,7 +232,8 @@ MonoBehaviour:
   moveSpeed: 5
   jumpSpeed: 8
   gravity: 40
-  sensitivity: 4
+  cameraSensitivity: 4
+  destroyDistance: 5
   cam: {fileID: 1867754445865655679}
 --- !u!114 &5712082225319455444
 MonoBehaviour:
@@ -246,6 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f4749f8953f4441907a091250ecbe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayAmount: 5000
-  rayDistance: 50
-  stayTime: 3
+  rayAmount: 7000
+  rayDistance: 100
+  stayTime: 5
+  cam: {fileID: 0}

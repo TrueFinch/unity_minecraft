@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using System.Linq;
 
 public enum BlockType
 {
@@ -121,19 +122,135 @@ public class WorldGenerator : MonoBehaviour
 
     private void GenerateWater()
     {
-        //for (var y = 0; y < bedrockHeight + groundHeight + height; ++y)
-        //{
-        //    for (var x = 0; x < size; ++x)
-        //    {
-        //        for (var z = 0; z < size; ++z)
-        //        {
-        //            if (blocksData[x, y, z] == BlockType.NONE)
-        //            {
+        for (var y = 0; y < bedrockHeight + groundHeight + height; ++y)
+        {
+            if (CanCreateRiver(y))
+            {
+                for (var x = 0; x < size; ++x)
+                {
+                    for (var z = 0; z < size; ++z)
+                    {
+                        if (blocksData[x, y, z] == BlockType.NONE)
+                        {
+                            CreateBlock(new Vector3Int(x, y, z), BlockType.WATER);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
 
-        //            }
-        //        }
-        //    }
-        //}
+    private bool IsPosValid(Vector3Int pos)
+    {
+        return 0 <= pos.x && pos.x < size
+            && 0 <= pos.y && pos.y < bedrockHeight + groundHeight + height
+            && 0 <= pos.z && pos.z < size;
+    }
+
+    private bool IsPosValid(Vector2Int pos)
+    {
+        return 0 <= pos.x && pos.x < size
+            && 0 <= pos.y && pos.y < size;
+    }
+
+    private BlockType GetBlockData(Vector3Int pos)
+    {
+        return blocksData[pos.x, pos.y, pos.z];
+    }
+
+    private bool GetUncoloredPos(int[,] colors, out Vector2Int res)
+    {
+        for (var x = 0; x < size; ++x)
+        {
+            for (var z = 0; z < size; ++z)
+            {
+                if (colors[x, z] == 0)
+                {
+                    res = new Vector2Int(x, z);
+                    return true;
+                }
+            }
+        }
+        res = Vector2Int.zero;
+        return false;
+    }
+    private HashSet<int> GetBorderColors(int[,] colors, int sx, int fx, int sz, int fz)
+    {
+        HashSet<int> set = new HashSet<int>();
+        for (int x = sx; x <= fx; ++x)
+        {
+            for (int z = sz; z <= fz; ++z)
+            {
+                if (colors[x, z] != -1)
+                {
+                    set.Add(colors[x, z]);
+                }
+            }
+        }
+        return set;
+    }
+
+    private bool CheckRiverIsBig(int[,] colors)
+    {
+        var downSet = GetBorderColors(colors, 0, (int)(size - 1), 0, 0);
+        var leftSet = GetBorderColors(colors, 0, 0, 0, (int)(size - 1));
+        var upSet = GetBorderColors(colors, 0, (int)(size - 1), (int)(size - 1), (int)(size - 1));
+        var rightSet = GetBorderColors(colors, (int)(size - 1), (int)(size - 1), 0, (int)(size - 1));
+        return downSet.Intersect(leftSet).Count() != 0
+            || downSet.Intersect(upSet).Count() != 0
+            || downSet.Intersect(rightSet).Count() != 0
+            || leftSet.Intersect(upSet).Count() != 0
+            || leftSet.Intersect(rightSet).Count() != 0
+            || upSet.Intersect(rightSet).Count() != 0;
+    }
+
+    private bool CanCreateRiver(int y)
+    {
+        int[,] colors = new int[size, size];
+        for (var x = 0; x < size; ++x)
+        {
+            for (var z = 0; z < size; ++z)
+            {
+                colors[x, z] = blocksData[x, y, z] != BlockType.NONE ? -1 : 0;
+            }
+        }
+        int curColor = 0;
+        bool emptyExist = true;
+        Queue<Vector2Int> points = new Queue<Vector2Int>();
+        while (emptyExist)
+        {
+            if (points.Count == 0)
+            {
+                ++curColor;
+                Vector2Int pos;
+                if (GetUncoloredPos(colors, out pos))
+                {
+                    colors[pos.x, pos.y] = curColor;
+                    points.Enqueue(pos);
+                }
+                else
+                {
+                    emptyExist = false;
+                    break;
+                }
+            }
+            Vector2Int current = points.Dequeue();
+            Vector2Int[] neighbours = new Vector2Int[] {
+                Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right
+            };
+            foreach (var n in neighbours)
+            {
+                var nPos = new Vector2Int(current.x + n.x, current.y + n.y);
+                if (IsPosValid(nPos) && colors[nPos.x, nPos.y] == 0)
+                {
+                    colors[current.x + n.x, current.y + n.y] = curColor;
+                    points.Enqueue(current + n);
+                }
+            }
+        }
+
+        return CheckRiverIsBig(colors);
     }
 
     private void SpawnPlayer()
@@ -145,9 +262,9 @@ public class WorldGenerator : MonoBehaviour
             {
                 for (var z = 0; z < size; ++z)
                 {
-                    if (blocksData[x, y, z] !=  BlockType.NONE)
+                    if (blocksData[x, y, z] != BlockType.NONE)
                     {
-                        Instantiate(player, new Vector3(x, y + 3, z), Quaternion.identity);
+                        Instantiate(player, new Vector3(x, y + 1, z), Quaternion.identity);
                         return;
                     }
                 }
@@ -173,7 +290,7 @@ public class WorldGenerator : MonoBehaviour
         {
             if (blocksData[x, y, z] == BlockType.NONE)
             {
-                Instantiate(creeper, new Vector3(x, y + 3, z), Quaternion.identity);
+                Instantiate(creeper, new Vector3(x, y + 1, z), Quaternion.identity);
                 break;
             }
         }
@@ -187,6 +304,34 @@ public class WorldGenerator : MonoBehaviour
         block.tag = type.ToString();
         block.transform.SetParent(GameObject.FindGameObjectWithTag("World").transform);
         blocksData[pos.x, pos.y, pos.z] = type;
+
+        if (type == BlockType.WATER)
+        {
+            Vector3Int[] neighbours = new Vector3Int[] {
+                Vector3Int.forward, Vector3Int.back, 
+                Vector3Int.left, Vector3Int.right
+            };
+            foreach (var n in neighbours)
+            {
+                var n1Pos = new Vector3Int(pos.x + n.x * 2, pos.y, pos.z + n.z * 2);
+                var n2Pos = new Vector3Int(pos.x + n.x, pos.y, pos.z + n.z);
+                if (!IsPosValid(n1Pos) || !IsPosValid(n2Pos))
+                {
+                    continue;
+                }
+                if (GetBlockData(n1Pos) == BlockType.WATER
+                    && GetBlockData(n2Pos) == BlockType.NONE)
+                {
+                    CreateBlock(n2Pos, BlockType.WATER);
+                }
+            }
+            var downPos = new Vector3Int(pos.x, pos.y - 1, pos.z);
+
+            if (IsPosValid(downPos) && GetBlockData(downPos) == BlockType.NONE)
+            {
+                CreateBlock(downPos, BlockType.WATER);
+            }
+        }
     }
 
     public void DestroyBlock(Vector3Int pos)

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3250088112773783930}
   - component: {fileID: -3028819476574580348}
   - component: {fileID: -732827835865931262}
+  - component: {fileID: 3464344037644978660}
   m_Layer: 0
   m_Name: WaterBlock
   m_TagString: WATER
@@ -92,7 +93,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3250088112773783929}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -123,3 +124,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canBeDestroyed: 1
+--- !u!114 &3464344037644978660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3250088112773783929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01723d856d96c874188dc25308f7af14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreCollisionWithTags:
+  - Player
+  - Creeper
