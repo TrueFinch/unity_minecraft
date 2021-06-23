@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public LayerMask IgnoreLayer;
     public float moveSpeed = 6;
     public float jumpSpeed = 8;
     public float gravity = 20;
@@ -89,13 +90,12 @@ public class PlayerController : MonoBehaviour
 
     private void MouseClick()
     {
-        LayerMask layerMask = LayerMask.NameToLayer("Player");
+        //LayerMask layerMask = LayerMask.NameToLayer("Player");
         if (Input.GetMouseButtonDown(0))
         {
             BlockController bc;
             var ray = new Ray(cam.transform.position, cam.transform.forward);
-            //var ray = cam.ScreenPointToRay(new Vector3(Screen.width / 2F, Screen.height / 2F, 0));
-            if (Physics.Raycast(ray, out var hit, destroyDistance, layerMask))
+            if (Physics.Raycast(ray, out var hit, destroyDistance, ~IgnoreLayer))
             {
                 if (bc = hit.transform.GetComponent<BlockController>())
                 {
@@ -115,8 +115,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             var ray = new Ray(cam.transform.position, cam.transform.forward);
-            //var ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0));
-            if (Physics.Raycast(ray, out var hit, destroyDistance, layerMask))
+            if (Physics.Raycast(ray, out var hit, destroyDistance, ~IgnoreLayer))
             {
                 Debug.DrawRay(ray.origin, ray.direction, Color.red);
                 if (hit.transform.GetComponent<BlockController>())
