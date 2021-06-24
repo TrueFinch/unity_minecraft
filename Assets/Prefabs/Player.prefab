@@ -251,6 +251,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayAmount: 7000
-  rayDistance: 100
-  stayTime: 5
+  rayDistance: 50
+  stayTime: 3
   cam: {fileID: 0}
