@@ -51,7 +51,6 @@ public class CreeperController : MonoBehaviour
                         {
                             Destroy(gameObject);
                             world.DestroySphere(Vector3Int.FloorToInt(transform.position), destroyDistance);
-                            //destroy creeper and blocks
                         }
                         //Debug.Log("End blinking");
                     });
@@ -100,7 +99,6 @@ public class CreeperController : MonoBehaviour
 
         if (Physics.Raycast(creeperPos, targetPos, out hit, 1F))
         {
-            //Debug.Log(hit.transform.name);
             return hit.transform.tag != "Creeper";
         }
         return false;
