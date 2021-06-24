@@ -298,7 +298,7 @@ public class WorldGenerator : MonoBehaviour
 
     public void CreateBlock(Vector3Int pos, BlockType type)
     {
-        if (GetBlockData(pos) != BlockType.NONE || type == BlockType.NONE) {
+        if (!IsPosValid(pos) || GetBlockData(pos) != BlockType.NONE || type == BlockType.NONE) {
             return;
         }
         GameObject go = availableBlocks[(int)type - 1];
