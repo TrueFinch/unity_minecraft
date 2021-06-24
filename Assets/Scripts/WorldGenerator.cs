@@ -322,7 +322,6 @@ public class WorldGenerator : MonoBehaviour
                     && GetBlockData(n1Pos) == BlockType.WATER
                         && GetBlockData(n2Pos) == BlockType.NONE)
                 {
-                    // TODO: move to coroutine
                     StartCoroutine(CreateBlockCoroutine(n2Pos, BlockType.WATER));
                 }
             }
@@ -330,7 +329,6 @@ public class WorldGenerator : MonoBehaviour
 
             if (IsPosValid(downPos) && GetBlockData(downPos) == BlockType.NONE)
             {
-                // TODO: move to coroutine
                 StartCoroutine(CreateBlockCoroutine(downPos, BlockType.WATER));
             }
         }
@@ -338,35 +336,44 @@ public class WorldGenerator : MonoBehaviour
 
     public void DestroyBlock(Vector3Int pos)
     {
-        if (blocksRef.ContainsKey(pos))
+        if (!blocksRef.ContainsKey(pos))
         {
-            Destroy(blocksRef[pos]);
-            blocksRef.Remove(pos);
-            blocksData[pos.x, pos.y, pos.z] = BlockType.NONE;
-
-            var upPos = pos + Vector3Int.up;
-            if (IsPosValid(upPos) && GetBlockData(upPos) == BlockType.WATER)
+            return;
+        }
+        BlockController bc;
+        if (bc = blocksRef[pos].transform.GetComponent<BlockController>())
+        {
+            if (!bc.canBeDestroyed)
             {
-                // TODO: move to coroutine
-                StartCoroutine(CreateBlockCoroutine(pos, BlockType.WATER));
+                return;
             }
-            else
+        }
+        Destroy(blocksRef[pos]);
+        blocksRef.Remove(pos);
+        blocksData[pos.x, pos.y, pos.z] = BlockType.NONE;
+
+        var upPos = pos + Vector3Int.up;
+        if (IsPosValid(upPos) && GetBlockData(upPos) == BlockType.WATER)
+        {
+            // TODO: move to coroutine
+            StartCoroutine(CreateBlockCoroutine(pos, BlockType.WATER));
+        }
+        else
+        {
+            var neighbors = new Tuple<Vector3Int, Vector3Int>[]
             {
-                var neighbors = new Tuple<Vector3Int, Vector3Int>[]
+                new Tuple<Vector3Int, Vector3Int>(pos + Vector3Int.left, pos + Vector3Int.right),
+                new Tuple<Vector3Int, Vector3Int>(pos + Vector3Int.forward, pos + Vector3Int.back),
+            };
+            foreach (var n in neighbors)
+            {
+                if (IsPosValid(n.Item1) && IsPosValid(n.Item2)
+                    && GetBlockData(n.Item1) == BlockType.WATER
+                    && GetBlockData(n.Item2) == BlockType.WATER)
                 {
-                    new Tuple<Vector3Int, Vector3Int>(pos + Vector3Int.left, pos + Vector3Int.right),
-                    new Tuple<Vector3Int, Vector3Int>(pos + Vector3Int.forward, pos + Vector3Int.back),
-                };
-                foreach (var n in neighbors)
-                {
-                    if (IsPosValid(n.Item1) && IsPosValid(n.Item2)
-                        && GetBlockData(n.Item1) == BlockType.WATER
-                        && GetBlockData(n.Item2) == BlockType.WATER)
-                    {
-                        // TODO: move to coroutine
-                        StartCoroutine(CreateBlockCoroutine(pos, BlockType.WATER));
-                        break;
-                    }
+                    // TODO: move to coroutine
+                    StartCoroutine(CreateBlockCoroutine(pos, BlockType.WATER));
+                    break;
                 }
             }
         }

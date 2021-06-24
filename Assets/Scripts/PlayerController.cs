@@ -99,15 +99,10 @@ public class PlayerController : MonoBehaviour
             {
                 if (bc = hit.transform.GetComponent<BlockController>())
                 {
-                    if (bc.canBeDestroyed)
-                    {
-                        Vector3Int pos = new Vector3Int(
-                            Mathf.FloorToInt(bc.transform.position.x),
-                            Mathf.FloorToInt(bc.transform.position.y),
-                            Mathf.FloorToInt(bc.transform.position.z)
-                        );
-                        world.DestroyBlock(pos);
-                    }
+                    Vector3Int pos = Vector3Int.FloorToInt(
+                        bc.transform.position
+                    );
+                    world.DestroyBlock(pos);
                 }
             }
         }
