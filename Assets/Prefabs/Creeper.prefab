@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
-  jumpSpeed: 6.5
+  jumpSpeed: 7
   gravity: 20
   destroyDistance: 5
 --- !u!143 &7000608203353357862
