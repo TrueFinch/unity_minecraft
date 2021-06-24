@@ -298,6 +298,9 @@ public class WorldGenerator : MonoBehaviour
 
     public void CreateBlock(Vector3Int pos, BlockType type)
     {
+        if (GetBlockData(pos) != BlockType.NONE || type == BlockType.NONE) {
+            return;
+        }
         //TODO add check that block in given position exists
         GameObject go = availableBlocks[(int)type - 1];
         var block = Instantiate(go, pos, Quaternion.identity);
@@ -367,6 +370,40 @@ public class WorldGenerator : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private List<Vector3Int> GetSpherePoints(int y, int radius)
+    {
+        HashSet<Vector3Int> res = new HashSet<Vector3Int>() { new Vector3Int(0, y, 0) };
+        for (var x = 1; x < radius; ++x)
+        {
+            res.Add(new Vector3Int(x, y, 0));
+            res.Add(new Vector3Int(-x, y, 0));
+            res.Add(new Vector3Int(0, y, x));
+            res.Add(new Vector3Int(0, y, -x));
+            for (var z = 1; z < radius - x; ++z)
+            {
+                res.Add(new Vector3Int(x, y, z));
+                res.Add(new Vector3Int(-x, y, z));
+                res.Add(new Vector3Int(x, y, -z));
+                res.Add(new Vector3Int(-x, y, -z));
+            }
+        }
+        return res.ToList();
+    }
+
+    public void DestroySphere(Vector3Int center, int radius)
+    {
+        HashSet<Vector3Int> shifts = new HashSet<Vector3Int>();
+        for (var y = -radius; y <= radius; ++y)
+        {
+            shifts.UnionWith(GetSpherePoints(y, radius - Mathf.Abs(y)));
+        }
+
+        foreach(var shift in shifts)
+        {
+            DestroyBlock(center + shift);
         }
     }
 }

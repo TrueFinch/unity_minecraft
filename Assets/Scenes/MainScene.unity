@@ -500,7 +500,7 @@ MonoBehaviour:
   freq2: 8
   freq3: 16
   exponent: 5
-  creeperCount: 0
+  creeperCount: 1
   creeperDistanceFromPlayer: 10
   availableBlocks:
   - {fileID: 2129567054921907152, guid: 6b36a96e7ea85ae41a438ef2f012d5ac, type: 3}

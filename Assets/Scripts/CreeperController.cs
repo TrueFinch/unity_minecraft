@@ -13,10 +13,12 @@ public class CreeperController : MonoBehaviour
     bool isblinking = false;
     Vector3 moveDir = Vector3.zero;
     GameObject target;
+    WorldGenerator world;
     // Start is called before the first frame update
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player");
+        world = GameObject.FindGameObjectWithTag("World").GetComponent<WorldGenerator>();
     }
 
     // Update is called once per frame
@@ -48,6 +50,7 @@ public class CreeperController : MonoBehaviour
                         if (distanceToPlayer <= destroyDistance)
                         {
                             Destroy(gameObject);
+                            world.DestroySphere(Vector3Int.FloorToInt(transform.position), destroyDistance);
                             //destroy creeper and blocks
                         }
                         //Debug.Log("End blinking");
