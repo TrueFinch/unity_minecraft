@@ -85,8 +85,8 @@ public class WorldGenerator : MonoBehaviour
                 maxH = Mathf.FloorToInt(Mathf.Max(maxH, heightsMap[x, z]));
             }
         }
-        Debug.Log(minH);
-        Debug.Log(maxH);
+        //Debug.Log(minH);
+        //Debug.Log(maxH);
 
         for (var x = 0; x < size; ++x)
         {
@@ -301,7 +301,6 @@ public class WorldGenerator : MonoBehaviour
         if (GetBlockData(pos) != BlockType.NONE || type == BlockType.NONE) {
             return;
         }
-        //TODO add check that block in given position exists
         GameObject go = availableBlocks[(int)type - 1];
         var block = Instantiate(go, pos, Quaternion.identity);
         blocksRef.Add(pos, block);
@@ -324,7 +323,7 @@ public class WorldGenerator : MonoBehaviour
                         && GetBlockData(n2Pos) == BlockType.NONE)
                 {
                     // TODO: move to coroutine
-                    CreateBlock(n2Pos, BlockType.WATER);
+                    StartCoroutine(CreateBlockCoroutine(n2Pos, BlockType.WATER));
                 }
             }
             var downPos = new Vector3Int(pos.x, pos.y - 1, pos.z);
@@ -332,7 +331,7 @@ public class WorldGenerator : MonoBehaviour
             if (IsPosValid(downPos) && GetBlockData(downPos) == BlockType.NONE)
             {
                 // TODO: move to coroutine
-                CreateBlock(downPos, BlockType.WATER);
+                StartCoroutine(CreateBlockCoroutine(downPos, BlockType.WATER));
             }
         }
     }
@@ -349,7 +348,7 @@ public class WorldGenerator : MonoBehaviour
             if (IsPosValid(upPos) && GetBlockData(upPos) == BlockType.WATER)
             {
                 // TODO: move to coroutine
-                CreateBlock(pos, BlockType.WATER);
+                StartCoroutine(CreateBlockCoroutine(pos, BlockType.WATER));
             }
             else
             {
@@ -365,7 +364,7 @@ public class WorldGenerator : MonoBehaviour
                         && GetBlockData(n.Item2) == BlockType.WATER)
                     {
                         // TODO: move to coroutine
-                        CreateBlock(pos, BlockType.WATER);
+                        StartCoroutine(CreateBlockCoroutine(pos, BlockType.WATER));
                         break;
                     }
                 }
@@ -405,5 +404,11 @@ public class WorldGenerator : MonoBehaviour
         {
             DestroyBlock(center + shift);
         }
+    }
+
+    IEnumerator CreateBlockCoroutine(Vector3Int pos, BlockType type)
+    {
+        yield return new WaitForSeconds(1F);
+        CreateBlock(pos, type);
     }
 }
