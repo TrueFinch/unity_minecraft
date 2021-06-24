@@ -39,6 +39,19 @@ public class WorldGenerator : MonoBehaviour
 
     private BlockType[,,] blocksData;
     private Dictionary<Vector3Int, GameObject> blocksRef;
+
+    public static HashSet<string> blocksToDestroy = new HashSet<string> {
+        "STONE",
+        "GRASS",
+        "WATER",
+    };
+    public static HashSet<string> blocksToCreateNear = new HashSet<string> {
+        "BEDROCK",
+        "STONE",
+        "GRASS",
+        "WATER",
+    };
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,12 +70,6 @@ public class WorldGenerator : MonoBehaviour
         {
             SpawnCreeper();
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void GenerateWorld()
@@ -308,6 +315,7 @@ public class WorldGenerator : MonoBehaviour
         block.transform.SetParent(GameObject.FindGameObjectWithTag("World").transform);
         blocksData[pos.x, pos.y, pos.z] = type;
 
+
         if (type == BlockType.WATER)
         {
             Vector3Int[] neighbours = new Vector3Int[] {
@@ -340,13 +348,9 @@ public class WorldGenerator : MonoBehaviour
         {
             return;
         }
-        BlockController bc;
-        if (bc = blocksRef[pos].transform.GetComponent<BlockController>())
+        if (!blocksToDestroy.Contains(blocksRef[pos].transform.tag))
         {
-            if (!bc.canBeDestroyed)
-            {
-                return;
-            }
+            return;
         }
         Destroy(blocksRef[pos]);
         blocksRef.Remove(pos);

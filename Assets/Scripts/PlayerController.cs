@@ -93,14 +93,13 @@ public class PlayerController : MonoBehaviour
         //LayerMask layerMask = LayerMask.NameToLayer("Player");
         if (Input.GetMouseButtonDown(0))
         {
-            BlockController bc;
             var ray = new Ray(cam.transform.position, cam.transform.forward);
             if (Physics.Raycast(ray, out var hit, destroyDistance, ~IgnoreLayer))
             {
-                if (bc = hit.transform.GetComponent<BlockController>())
+                if (WorldGenerator.blocksToDestroy.Contains(hit.transform.tag))
                 {
                     Vector3Int pos = Vector3Int.FloorToInt(
-                        bc.transform.position
+                        hit.transform.position
                     );
                     world.DestroyBlock(pos);
                 }
@@ -113,7 +112,7 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(ray, out var hit, destroyDistance, ~IgnoreLayer))
             {
                 Debug.DrawRay(ray.origin, ray.direction, Color.red);
-                if (hit.transform.GetComponent<BlockController>())
+                if (WorldGenerator.blocksToCreateNear.Contains(hit.transform.tag))
                 {
                     var pos = hit.transform.position + hit.normal;
                     Vector3Int posInt = new Vector3Int(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));

@@ -6,11 +6,6 @@ public class OcclusionObject : MonoBehaviour
 {
     Renderer render;
     public float displayTime;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void Update()
