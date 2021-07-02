@@ -42,7 +42,6 @@ public class CreeperController : MonoBehaviour
                 isblinking = true;
                 if (effect = gameObject.GetComponent<BlinkingEffect>())
                 {
-                    //Debug.Log("Start blinking");
                     effect.StartBlinking(() =>
                     {
                         isblinking = false;
@@ -52,7 +51,6 @@ public class CreeperController : MonoBehaviour
                             Destroy(gameObject);
                             world.DestroySphere(Vector3Int.FloorToInt(transform.position), destroyDistance);
                         }
-                        //Debug.Log("End blinking");
                     });
                 }
             }
@@ -79,21 +77,11 @@ public class CreeperController : MonoBehaviour
         character.Move(moveDir * Time.deltaTime);
     }
 
-    private void StartBlinking()
-    {
-        throw new NotImplementedException();
-    }
-
     private bool CheckNeedJump()
     {
-        Vector3 creeperPos = transform.position;
-        creeperPos.x = Mathf.Floor(creeperPos.x);
-        creeperPos.y = Mathf.Floor(creeperPos.y);
-        creeperPos.z = Mathf.Floor(creeperPos.z);
-        Vector3 targetPos = target.transform.position;
-        targetPos.x = Mathf.Floor(targetPos.x);
+        Vector3 creeperPos = Vector3Int.FloorToInt(transform.position);
+        Vector3 targetPos = Vector3Int.FloorToInt(target.transform.position);
         targetPos.y = creeperPos.y;
-        targetPos.z = Mathf.Floor(targetPos.z);
 
         RaycastHit hit;
 
